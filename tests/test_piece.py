@@ -1,6 +1,7 @@
+from dataclasses import replace
 import unittest
 from checkers.piece import Piece
-from checkers.constants import RED, WHITE
+from checkers.constants import RED
 
 class TestPiece(unittest.TestCase):
     def test_piece_initialization(self):
@@ -12,12 +13,12 @@ class TestPiece(unittest.TestCase):
 
     def test_make_king(self):
         piece = Piece(0, 0, RED)
-        piece.make_king()
+        piece = replace(piece, king=True)
         self.assertTrue(piece.king)
 
     def test_piece_move(self):
         piece = Piece(0, 0, RED)
-        piece.move(2, 3)
+        piece = replace(piece, row=2, col=3)
         self.assertEqual(piece.row, 2)
         self.assertEqual(piece.col, 3)
 

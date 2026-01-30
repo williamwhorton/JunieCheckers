@@ -41,16 +41,17 @@ class TestMultiJump(unittest.TestCase):
         
         # After first jump, it should still be RED's turn because another jump is available to (1, 1)
         self.assertEqual(self.game.turn, RED, "Turn should not change if another jump is available")
-        self.assertEqual(self.game.selected, red_piece, "The same piece should remain selected")
+        # self.game.selected should be the new piece at (3,3)
+        self.assertEqual(self.game.selected.row, 3)
+        self.assertEqual(self.game.selected.col, 3)
         self.assertIn((1, 1), self.game.valid_moves, "The next jump should be in valid moves")
         self.assertEqual(len(self.game.valid_moves), 1, "Only the next jump should be available")
 
         # Try to select another piece or square (should be ignored or handled by select logic)
-        # In our case, select(3,3) again shouldn't do anything because there is no piece there now (it moved to 3,3 though)
-        # Wait, piece is AT (3,3) now.
         res = self.game.select(5,5) # Try to select empty square
         self.assertFalse(res)
-        self.assertEqual(self.game.selected, red_piece)
+        self.assertEqual(self.game.selected.row, 3)
+        self.assertEqual(self.game.selected.col, 3)
         
         # Finish the jump
         self.game.select(1, 1)

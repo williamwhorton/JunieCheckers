@@ -1,15 +1,22 @@
 import pygame
-from .constants import RED, BLACK, WHITE, SQUARE_SIZE, ROWS, COLS
-from .board import Board
+from checkers.constants import RED, BLACK, SQUARE_SIZE, ROWS, COLS
+from checkers.board import Board
+from checkers.piece import Piece
 
 class Game:
+    win: pygame.Surface
+    selected: Piece | None
+    board: Board
+    turn: tuple
+    valid_moves: dict
+
     def __init__(self, win):
         self._init()
         self.win = win
 
     def update(self):
         self.board.draw(self.win)
-        self.draw_valid_moves(self.valid_moves)
+        self.draw_valid_moves(self.win, self.valid_moves)
         pygame.display.update()
 
     def _init(self):
@@ -20,9 +27,6 @@ class Game:
 
     def winner(self):
         return self.board.winner()
-
-    def reset(self):
-        self._init()
 
     def select(self, row, col):
         if self.selected:
@@ -49,7 +53,7 @@ class Game:
 
     def _can_another_piece_jump(self, current_piece):
         # Mandatory jump: if any piece can jump, current piece can only move if it also can jump
-        all_moves = []
+        any_piece_can_jump = False
         piece_can_jump = False
         
         for r in range(ROWS):
@@ -58,18 +62,18 @@ class Game:
                 if p != 0 and p.color == self.turn:
                     moves = self.board.get_valid_moves(p)
                     if any(s for s in moves.values() if s):
+                        any_piece_can_jump = True
                         if p == current_piece:
                             piece_can_jump = True
-                        all_moves.append(p)
         
-        if all_moves and not piece_can_jump:
+        if any_piece_can_jump and not piece_can_jump:
             return True # Another piece MUST jump
         return False
 
     def _move(self, row, col):
         piece = self.board.get_piece(row, col)
         if self.selected and piece == 0 and (row, col) in self.valid_moves:
-            self.board.move(self.selected, row, col)
+            self.selected = self.board.move(self.selected, row, col)
             skipped = self.valid_moves[(row, col)]
             if skipped:
                 self.board.remove(skipped)
@@ -86,10 +90,11 @@ class Game:
 
         return True
 
-    def draw_valid_moves(self, moves):
+    @staticmethod
+    def draw_valid_moves(win, moves):
         for move in moves:
             row, col = move
-            pygame.draw.circle(self.win, (0, 255, 0), (col * SQUARE_SIZE + SQUARE_SIZE//2, row * SQUARE_SIZE + SQUARE_SIZE//2), 15)
+            pygame.draw.circle(win, (0, 255, 0), (col * SQUARE_SIZE + SQUARE_SIZE//2, row * SQUARE_SIZE + SQUARE_SIZE//2), 15)
 
     def change_turn(self):
         self.valid_moves = {}

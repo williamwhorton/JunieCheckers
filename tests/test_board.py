@@ -1,7 +1,6 @@
 import unittest
 from checkers.board import Board
 from checkers.constants import RED, BLACK, ROWS, COLS
-from checkers.piece import Piece
 
 class TestBoard(unittest.TestCase):
     def setUp(self):
@@ -37,12 +36,12 @@ class TestBoard(unittest.TestCase):
             if piece: break
         
         target_row, target_col = 4, 4 # Just some empty spot
-        self.board.move(piece, target_row, target_col)
+        new_piece = self.board.move(piece, target_row, target_col)
         
         self.assertEqual(self.board.board[start_row][start_col], 0)
-        self.assertEqual(self.board.board[target_row][target_col], piece)
-        self.assertEqual(piece.row, target_row)
-        self.assertEqual(piece.col, target_col)
+        self.assertEqual(self.board.board[target_row][target_col], new_piece)
+        self.assertEqual(new_piece.row, target_row)
+        self.assertEqual(new_piece.col, target_col)
 
     def test_get_piece(self):
         piece = self.board.get_piece(0, 1)

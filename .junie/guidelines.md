@@ -25,7 +25,7 @@ The goal of this project is to develop a functional, Pygame-based Checkers game 
 ## 3. Constraints
 - **Language**: Python 3.13+.
 - **Libraries**: Use `pygame-ce` (or `pygame`) for the game engine and UI; `unittest` for testing. Otherwise, prefer built-in libraries.
-- **Coding Style**: PEP 8 compliance. Follow a TDD approach.
+- **Coding Style**: PEP 8 compliance. Follow a TDD approach. Define all class attributes within the class definition. Avoid duplicating code. Use static functions where appropriate. Prefer same directory imports over relative imports. Prefer immutable data structures over mutable ones.
 - **Architecture**: Modular design (e.g., separate modules for board logic, pygame rendering, and game state).
 - **Version Control**: Use Git for version control, with a clear branching strategy (e.g., feature branches, pull requests). Commit messages should be clear and descriptive. Push to GitHub frequently.
 
